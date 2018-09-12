@@ -1,1 +1,104 @@
 /* You can add global styles to this file, and also import other style files */
+
+.margin-container {
+  margin: 40px 0 40px 5px;
+}
+
+.margin-progress {
+  margin-top: 7px;
+}
+
+.puntero {
+  cursor: pointer;
+}
+
+.title-cards {
+  margin: 0;
+}
+
+.bg-disable {
+  background-color: rgb(199, 195, 195);
+}
+
+.fs8 {
+  font-size: 8px;
+}
+
+.fs15 {
+  font-size: 15px;
+}
+
+.btn {
+  padding: 0 0 5px 0 !important;
+}
+
+/* Animaciones */
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.fast {
+  -webkit-animation-duration: 0.4s;
+  animation-duration: 0.4s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+}
+
+.hoverable {
+  transition: box-shadow 0.25s;
+}
+
+.hoverable:hover {
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.verde {
+  color: white !important;
+  background-color: #03be03 !important;
+}
+
+.rojo {
+  color: white !important;
+  background-color: #ff0000 !important;
+}
+
+.amarillo {
+  color: black !important;
+  background-color: #ffff00 !important;
+}
+
+.azul {
+  color: white !important;
+  background-color: #0000ff !important;
+}
+
+.super-verde {
+  color: white !important;
+  background-color: #017701 !important;
+}
+
+.default {
+  color: #9c9c9c;
+  background-color: #9c9c9c;
+}
+
+.card {
+  margin: 1%;
+}
