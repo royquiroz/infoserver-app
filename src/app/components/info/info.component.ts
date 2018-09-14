@@ -14,7 +14,7 @@ export class InfoComponent implements OnInit {
   infoId: any;
   dataId: boolean = false;
   dateNow: any = new Date();
-  discLength: any
+  discLength: any;
 
   ngOnInit() {
     this.searchData();
@@ -42,7 +42,7 @@ export class InfoComponent implements OnInit {
     this._serversService.dataId(id).subscribe(
       (res: any) => {
         this.infoId = res.data;
-        this.discLength = this.infoId.info.length
+        this.discLength = this.infoId.info.length;
       },
       err => {
         console.log(err);
@@ -63,53 +63,71 @@ export class InfoComponent implements OnInit {
     this.visible = !this.visible;
   }
 
-
   /*Funciones para establecer colores a los campos de discos*/
 
   porcentYellow(path: string, porcentaje: any, avail: any) {
-
-    if(path === '/' || path === '/mnt/datos/share'){
+    if (path === "/" || path === "/mnt/datos/share") {
       porcentaje = porcentaje.split("%")[0];
       porcentaje = parseInt(porcentaje);
       if (porcentaje >= 50 && porcentaje <= 79) {
         return true;
       }
-      return
+      return;
     }
-    avail = avail.replace('G', '')
-    avail = parseInt(avail)
+
+    if (avail.includes("K")) {
+      avail = avail.replace("K", "");
+      avail = parseFloat(avail);
+      avail = "0G";
+    } else if (avail.includes("M")) {
+      avail = avail.replace("M", "");
+      avail = parseFloat(avail);
+      avail = avail / 1000 + "G";
+    }
+
+    avail = avail.replace("G", "");
+    avail = parseInt(avail);
     //console.log(path, avail)
     if (avail > 100 && avail <= 200) {
       return true;
     }
-    return false
+    return false;
   }
 
   porcentRed(path: string, porcentaje: any, avail: any) {
-
-    if(path === '/' || path === '/mnt/datos/share'){
+    if (path === "/" || path === "/mnt/datos/share") {
       porcentaje = porcentaje.split("%")[0];
       porcentaje = parseInt(porcentaje);
       if (porcentaje >= 80 && porcentaje <= 100) {
         return true;
       }
-      return
+      return;
     }
-    avail = avail.replace('G', '')
-    avail = parseInt(avail)
+
+    if (avail.includes("K")) {
+      avail = avail.replace("K", "");
+      //avail = parseFloat(avail);
+      avail = "0G";
+    } else if (avail.includes("M")) {
+      avail = avail.replace("M", "");
+      avail = parseFloat(avail);
+      avail = avail / 1000 + "G";
+    }
+
+    avail = avail.replace("G", "");
+    avail = parseInt(avail);
     //console.log(path, avail)
     if (avail <= 100) {
       return true;
     }
     return false;
-
   }
 
-  values(path: string, porcentaje: any, avail: any){
-    if(path === '/' || path === '/mnt/datos/share'){
-      return porcentaje
+  values(path: string, porcentaje: any, avail: any) {
+    if (path === "/" || path === "/mnt/datos/share") {
+      return porcentaje;
     }
-    return avail
+    return avail;
   }
   /* ********************************************************************* */
 
@@ -141,18 +159,15 @@ export class InfoComponent implements OnInit {
 
   /*Funcion para separar el nombre de el fylesystem */
 
-  cutName(path: any){
-    path = path.split('/')
-    let lengthPath = path.length
-    path = path[lengthPath-1]
-    if(path === '') {
-      return 'raiz'
+  cutName(path: any) {
+    path = path.split("/");
+    let lengthPath = path.length;
+    path = path[lengthPath - 1];
+    if (path === "") {
+      return "raiz";
     }
-    return path
+    return path;
   }
-
-
-
 
   /*
   oneDayBefore(date: any) {
