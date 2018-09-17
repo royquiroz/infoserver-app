@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ServersService } from "../../services/servers.service";
+import * as moment from "moment";
 
 @Component({
   selector: "app-info",
@@ -13,11 +14,20 @@ export class InfoComponent implements OnInit {
   /**Informacion por notaria */
   infoId: any;
   dataId: boolean = false;
-  dateNow: any = new Date();
   discLength: any;
+
+  now: any = moment(Date.now());
+
+  //fechaAnterior: any = moment(Date.parse("Mon Sep 17 12:46:55 CDT 2018"));
 
   ngOnInit() {
     this.searchData();
+    //console.log(this.now, this.fechaAnterior);
+
+    /*console.log(
+      this.now.diff(this.fechaAnterior, "minutes"),
+      " horas de diferencia"
+    );*/
   }
 
   searchData() {
@@ -129,6 +139,46 @@ export class InfoComponent implements OnInit {
     }
     return avail;
   }
+
+  /*Funcion para separar el nombre de el fylesystem */
+
+  cutName(path: any) {
+    path = path.split("/");
+    let lengthPath = path.length;
+    path = path[lengthPath - 1];
+    if (path === "") {
+      return "raiz";
+    }
+    return path;
+  }
+
+  /*Funcion para calcular los meses de mantenimiento */
+
+  dateMaintenance(date: any) {
+    date = moment(Date.parse(date));
+
+    return this.now.diff(date, "months");
+  }
+
+  /*Funcion para calcular la fecha del server*/
+
+  dateServer(date: any) {
+    date = moment(Date.parse(date));
+
+    return this.now.diff(date, "hours");
+  }
+
+  /*Funcion para calcular los dias de respaldo */
+
+  dateBack(date: any) {
+    date = moment(Date.parse(date));
+
+    return this.now.diff(date, "days");
+  }
+
+
+
+
   /* ********************************************************************* */
 
   /*availYellow(path: any, avail: any) {
@@ -156,18 +206,6 @@ export class InfoComponent implements OnInit {
     }
     return false;
   }*/
-
-  /*Funcion para separar el nombre de el fylesystem */
-
-  cutName(path: any) {
-    path = path.split("/");
-    let lengthPath = path.length;
-    path = path[lengthPath - 1];
-    if (path === "") {
-      return "raiz";
-    }
-    return path;
-  }
 
   /*
   oneDayBefore(date: any) {

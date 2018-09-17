@@ -29,9 +29,11 @@
           <tr>
             <th class="text-center" scope="col">Notaria/Fecha</th>
             <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.discos.length'>Discos</th>
-            <!--<th class="text-center" scope="col" [attr.colspan]='2'>Respaldo</th>
             <th class="text-center" scope="col">Mantenimiento</th>
             <th class="text-center" scope="col">Fecha Local Server</th>
+            <th class="text-center" scope="col">Respaldo Interno</th>
+            <th class="text-center" scope="col">Respaldo Externo</th>
+            <!--<th class="text-center" scope="col">Mantenimiento</th>
             <th class="text-center" scope="col">Ultimo archivo</th>-->
           </tr>
         </thead>
@@ -40,21 +42,22 @@
             <th class="text-center">{{notaria.id_notaria}}
               <br /><small>{{notaria?.informacion?.fecha[0]?.fecha}}</small>
             </th>
-            <td *ngFor="let disco of notaria?.informacion?.discos" [ngClass]="{'amarillo': porcentYellow(disco.Mounted_on, disco.Use, disco.Avail), 'rojo': porcentRed(disco.Mounted_on, disco.Use, disco.Avail) }" [ngbPopover]="popContent" triggers="mouseenter:mouseleave"
-              container="body">
+            <td *ngFor="let disco of notaria?.informacion?.discos" [ngClass]="{'amarillo': porcentYellow(disco.Mounted_on, disco.Use, disco.Avail), 'rojo': porcentRed(disco.Mounted_on, disco.Use, disco.Avail) }"
+              [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
               <ng-template #popContent>
                 <pre>{{disco | json}}</pre>
               </ng-template>
-              <p class="text-center">{{cutName(disco.Mounted_on)}} <br/> {{values(disco.Mounted_on, disco.Use, disco.Avail)}}</p>  
+              <p class="text-center">{{cutName(disco.Mounted_on)}} <br /> {{values(disco.Mounted_on, disco.Use,
+                disco.Avail)}}</p>
             </td>
-            <!--<td [ngClass]="{'rojo': oneDayBefore(notaria?.informacion?.respaldos[0]?.interno?.fecha)}" ngbPopover="{{notaria?.informacion?.respaldos[0]?.interno?.fecha}}" triggers="mouseenter:mouseleave"
-              container="body"></td>
-            <td class="" ngbPopover="{{notaria?.informacion?.respaldos[1]?.externo?.fecha}}" triggers="mouseenter:mouseleave"
-              container="body"></td>
-            <td class="" ngbPopover="{{notaria?.informacion?.mantenimiento}}" triggers="mouseenter:mouseleave"
-              container="body"></td>
-              <td class="" ngbPopover="{{notaria?.informacion?.mantenimiento}}" triggers="mouseenter:mouseleave" container="body"></td>
-            <td class="" ngbPopover="{{notaria?.creacion}}" triggers="mouseenter:mouseleave" container="body"></td>-->
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}"
+            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 }">{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[0]?.fecha}}"
+            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 }">{{dateServer(notaria?.informacion?.fecha[0]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}"
+            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 1 }" >{{dateBack(notaria?.informacion?.fecha[2]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}"
+            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 1 }" >{{dateBack(notaria?.informacion?.fecha[3]?.fecha)}}</td>
           </tr>
         </tbody>
       </table>
@@ -72,8 +75,8 @@
           <tr>
             <th class="text-center" scope="col">Notaria/Fecha</th>
             <th class="text-center" scope="col" [attr.colspan]="infoId?.info[discLength - 1]?.informacion?.discos.length">Discos</th>
-            <!--<th class="text-center" scope="col" [attr.colspan]='2'>Respaldo</th>
             <th class="text-center" scope="col">Mantenimiento</th>
+            <!--<th class="text-center" scope="col" [attr.colspan]='2'>Respaldo</th>
             <th class="text-center" scope="col">Fecha Local Server</th>
             <th class="text-center" scope="col">Ultimo archivo</th>-->
           </tr>
@@ -87,8 +90,10 @@
             <ng-template #popContent>
               <pre>{{disco | json}}</pre>
             </ng-template>
-            <p class="text-center">{{cutName(disco.Mounted_on)}} <br/> {{values(disco.Mounted_on, disco.Use, disco.Avail)}}</p>  
+            <p class="text-center">{{cutName(disco.Mounted_on)}} <br /> {{values(disco.Mounted_on, disco.Use,
+              disco.Avail)}}</p>
           </td>
+          <td class="text-center">{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}}</td>
           <!--<td [ngClass]="{'rojo': oneDayBefore(item?.informacion?.respaldos[0]?.interno?.fecha)}" ngbPopover="{{item?.informacion?.respaldos[0]?.interno?.fecha}}"
             triggers="mouseenter:mouseleave" container="body"></td>
           <td [ngClass]="{'rojo': oneDayBefore(item?.informacion?.respaldos[0]?.interno?.fecha)}" ngbPopover="{{item?.informacion?.respaldos[1]?.externo?.fecha}}"
