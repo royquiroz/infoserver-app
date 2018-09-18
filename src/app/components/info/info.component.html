@@ -19,7 +19,7 @@
   </div>
 
 
-
+<!--Tablas con el ultimo estaus de las notarias-->
 
   <div *ngIf="!dataId">
 
@@ -33,8 +33,8 @@
             <th class="text-center" scope="col">Fecha Local Server</th>
             <th class="text-center" scope="col">Respaldo Interno</th>
             <th class="text-center" scope="col">Respaldo Externo</th>
-            <!--<th class="text-center" scope="col">Mantenimiento</th>
-            <th class="text-center" scope="col">Ultimo archivo</th>-->
+            <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.red.length'>Tarjetas de Red</th>
+            <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.software.length'>Software</th>
           </tr>
         </thead>
         <tbody>
@@ -50,14 +50,29 @@
               <p class="text-center">{{cutName(disco.Mounted_on)}} <br /> {{values(disco.Mounted_on, disco.Use,
                 disco.Avail)}}</p>
             </td>
-            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}"
-            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 }">{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}}</td>
-            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[0]?.fecha}}"
-            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 }">{{dateServer(notaria?.informacion?.fecha[0]?.fecha)}}</td>
-            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}"
-            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 1 }" >{{dateBack(notaria?.informacion?.fecha[2]?.fecha)}}</td>
-            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}"
-            triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 1 }" >{{dateBack(notaria?.informacion?.fecha[3]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
+              container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 }">{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[0]?.fecha}}" triggers="mouseenter:mouseleave"
+              container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 }">{{dateServer(notaria?.informacion?.fecha[0]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
+              container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 1 }">{{dateBack(notaria?.informacion?.fecha[2]?.fecha)}}</td>
+            <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
+              container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 1 }">{{dateBack(notaria?.informacion?.fecha[3]?.fecha)}}</td>
+            <td *ngFor="let red of notaria?.informacion?.red" triggers="mouseenter:mouseleave"
+            container="body" [ngbPopover]="popContent" class="text-center">
+              <ng-template #popContent>
+                <pre>{{red | json}}</pre>
+              </ng-template>
+            </td>
+
+            <td *ngFor="let software of notaria?.informacion?.software" triggers="mouseenter:mouseleave"
+            container="body" [ngbPopover]="popContent" class="text-center">
+              <ng-template #popContent>
+                <pre>{{software | json}}</pre>
+              </ng-template>
+              <p class="text-center">{{software.nombre}}</p>
+            </td>
+            
           </tr>
         </tbody>
       </table>
@@ -65,7 +80,7 @@
 
   </div>
 
-
+<!--Tablas por notarias, con todo el historico de las notarias-->
 
   <div *ngIf="dataId">
 
@@ -76,9 +91,11 @@
             <th class="text-center" scope="col">Notaria/Fecha</th>
             <th class="text-center" scope="col" [attr.colspan]="infoId?.info[discLength - 1]?.informacion?.discos.length">Discos</th>
             <th class="text-center" scope="col">Mantenimiento</th>
-            <!--<th class="text-center" scope="col" [attr.colspan]='2'>Respaldo</th>
             <th class="text-center" scope="col">Fecha Local Server</th>
-            <th class="text-center" scope="col">Ultimo archivo</th>-->
+            <th class="text-center" scope="col">Respaldo Interno</th>
+            <th class="text-center" scope="col">Respaldo Externo</th>
+            <th class="text-center" scope="col" [attr.colspan]='infoId?.info[discLength - 1]?.informacion?.red.length'>Tarjetas de Red</th>
+            <th class="text-center" scope="col" [attr.colspan]='infoId?.info[discLength - 1]?.informacion?.software.length'>Software</th>
           </tr>
         </thead>
         <tbody *ngFor="let item of infoId?.info">
@@ -93,15 +110,30 @@
             <p class="text-center">{{cutName(disco.Mounted_on)}} <br /> {{values(disco.Mounted_on, disco.Use,
               disco.Avail)}}</p>
           </td>
-          <td class="text-center">{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}}</td>
-          <!--<td [ngClass]="{'rojo': oneDayBefore(item?.informacion?.respaldos[0]?.interno?.fecha)}" ngbPopover="{{item?.informacion?.respaldos[0]?.interno?.fecha}}"
-            triggers="mouseenter:mouseleave" container="body"></td>
-          <td [ngClass]="{'rojo': oneDayBefore(item?.informacion?.respaldos[0]?.interno?.fecha)}" ngbPopover="{{item?.informacion?.respaldos[1]?.externo?.fecha}}"
-            triggers="mouseenter:mouseleave" container="body"></td>
-          <td [ngClass]="{'rojo': maintenance(item?.informacion?.mantenimiento)}" ngbPopover="Hora local: {{dateNow | date:'medium'}} Hora del servidor: {{item?.informacion?.mantenimiento | date:'medium'}}"
-              triggers="mouseenter:mouseleave" container="body"></td>
-          <td class="" ngbPopover="{{item?.informacion?.mantenimiento}}" triggers="mouseenter:mouseleave" container="body"></td>
-          <td class="" ngbPopover="{{item?.creacion}}" triggers="mouseenter:mouseleave" container="body"></td>-->
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'amarillo': dateMaintenance(item?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(item?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(item?.informacion?.fecha[1]?.fecha) >= 12 }">{{dateMaintenance(item?.informacion?.fecha[1]?.fecha)}}</td>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[0]?.fecha}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'amarillo': dateServer(item?.informacion?.fecha[0]?.fecha) === 1 || dateServer(item?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(item?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(item?.informacion?.fecha[0]?.fecha) >= 2 }">{{dateServer(item?.informacion?.fecha[0]?.fecha)}}</td>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'rojo': dateBack(item?.informacion?.fecha[2]?.fecha) >= 1 }">{{dateBack(item?.informacion?.fecha[2]?.fecha)}}</td>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'rojo': dateBack(item?.informacion?.fecha[3]?.fecha) >= 1 }">{{dateBack(item?.informacion?.fecha[3]?.fecha)}}</td>
+
+          <td *ngFor="let red of item?.informacion?.red" triggers="mouseenter:mouseleave"
+            container="body" [ngbPopover]="popContent" class="text-center">
+            <ng-template #popContent>
+              <pre>{{red | json}}</pre>
+            </ng-template>
+           </td>
+
+          <td *ngFor="let software of item?.informacion?.software" triggers="mouseenter:mouseleave"
+          container="body" [ngbPopover]="popContent" class="text-center">
+            <ng-template #popContent>
+              <pre>{{software | json}}</pre>
+            </ng-template>
+            <p class="text-center">{{software.nombre}}</p>
+          </td>
+
         </tbody>
       </table>
     </div>
