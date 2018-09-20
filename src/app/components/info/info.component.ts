@@ -76,7 +76,7 @@ export class InfoComponent implements OnInit {
   /*Funciones para establecer colores a los campos de discos*/
 
   porcentYellow(path: string, porcentaje: any, avail: any) {
-    if (path === "/" || path === "/mnt/datos/share") {
+    if (path === "/" || path === "/mnt/datos/share" || path === "/mnt/datos/log") {
       porcentaje = porcentaje.split("%")[0];
       porcentaje = parseInt(porcentaje);
       if (porcentaje >= 50 && porcentaje <= 79) {
@@ -105,7 +105,7 @@ export class InfoComponent implements OnInit {
   }
 
   porcentRed(path: string, porcentaje: any, avail: any) {
-    if (path === "/" || path === "/mnt/datos/share") {
+    if (path === "/" || path === "/mnt/datos/share" || path === "/mnt/datos/log") {
       porcentaje = porcentaje.split("%")[0];
       porcentaje = parseInt(porcentaje);
       if (porcentaje >= 80 && porcentaje <= 100) {
@@ -134,7 +134,7 @@ export class InfoComponent implements OnInit {
   }
 
   values(path: string, porcentaje: any, avail: any) {
-    if (path === "/" || path === "/mnt/datos/share") {
+    if (path === "/" || path === "/mnt/datos/share" || path === "/mnt/datos/log") {
       return porcentaje;
     }
     return avail;
@@ -155,6 +155,9 @@ export class InfoComponent implements OnInit {
   /*Funcion para calcular los meses de mantenimiento */
 
   dateMaintenance(date: any) {
+    if (date === "" || date === undefined) {
+      return "";
+    }
     date = moment(Date.parse(date));
 
     return this.now.diff(date, "months");
@@ -163,6 +166,9 @@ export class InfoComponent implements OnInit {
   /*Funcion para calcular la fecha del server*/
 
   dateServer(date: any) {
+    if (date === "" || date === undefined) {
+      return "";
+    }
     date = moment(Date.parse(date));
 
     return this.now.diff(date, "hours");
@@ -171,13 +177,22 @@ export class InfoComponent implements OnInit {
   /*Funcion para calcular los dias de respaldo */
 
   dateBack(date: any) {
+    if (date === "" || date === undefined) {
+      return "";
+    }
     date = moment(Date.parse(date));
 
     return this.now.diff(date, "days");
   }
 
+  
+  decoded(str: string) {
+    return atob(str)
+  }
 
-
+  encoded(str: string) {
+    return btoa(str)
+  }
 
   /* ********************************************************************* */
 
