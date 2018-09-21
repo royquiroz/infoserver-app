@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ServersService } from "../../services/servers.service";
 import * as moment from "moment";
 
@@ -7,7 +7,10 @@ import * as moment from "moment";
   templateUrl: "./info.component.html"
 })
 export class InfoComponent implements OnInit {
-  constructor(private _serversService: ServersService) {}
+  constructor(
+    private _serversService: ServersService,
+    private cdRef: ChangeDetectorRef
+  ) {}
   infoAll: any;
   recent: any = [];
   visible: boolean = false;
@@ -15,6 +18,7 @@ export class InfoComponent implements OnInit {
   infoId: any;
   dataId: boolean = false;
   discLength: any;
+  isDecoded: boolean = false;
 
   now: any = moment(Date.now());
 
@@ -76,7 +80,11 @@ export class InfoComponent implements OnInit {
   /*Funciones para establecer colores a los campos de discos*/
 
   porcentYellow(path: string, porcentaje: any, avail: any) {
-    if (path === "/" || path === "/mnt/datos/share" || path === "/mnt/datos/log") {
+    if (
+      path === "/" ||
+      path === "/mnt/datos/share" ||
+      path === "/mnt/datos/log"
+    ) {
       porcentaje = porcentaje.split("%")[0];
       porcentaje = parseInt(porcentaje);
       if (porcentaje >= 50 && porcentaje <= 79) {
@@ -105,7 +113,11 @@ export class InfoComponent implements OnInit {
   }
 
   porcentRed(path: string, porcentaje: any, avail: any) {
-    if (path === "/" || path === "/mnt/datos/share" || path === "/mnt/datos/log") {
+    if (
+      path === "/" ||
+      path === "/mnt/datos/share" ||
+      path === "/mnt/datos/log"
+    ) {
       porcentaje = porcentaje.split("%")[0];
       porcentaje = parseInt(porcentaje);
       if (porcentaje >= 80 && porcentaje <= 100) {
@@ -126,15 +138,24 @@ export class InfoComponent implements OnInit {
 
     avail = avail.replace("G", "");
     avail = parseInt(avail);
+
     //console.log(path, avail)
-    if (avail <= 100) {
+    porcentaje = porcentaje.split("%")[0];
+    porcentaje = parseInt(porcentaje);
+    //console.log(porcentaje)
+
+    if (avail <= 100 && porcentaje > 50) {
       return true;
     }
     return false;
   }
 
   values(path: string, porcentaje: any, avail: any) {
-    if (path === "/" || path === "/mnt/datos/share" || path === "/mnt/datos/log") {
+    if (
+      path === "/" ||
+      path === "/mnt/datos/share" ||
+      path === "/mnt/datos/log"
+    ) {
       return porcentaje;
     }
     return avail;
@@ -156,7 +177,7 @@ export class InfoComponent implements OnInit {
 
   dateMaintenance(date: any) {
     if (date === "" || date === undefined) {
-      return "";
+      return "No se recibio fecha";
     }
     date = moment(Date.parse(date));
 
@@ -167,7 +188,7 @@ export class InfoComponent implements OnInit {
 
   dateServer(date: any) {
     if (date === "" || date === undefined) {
-      return "";
+      return "No se recibio fecha";
     }
     date = moment(Date.parse(date));
 
@@ -178,23 +199,43 @@ export class InfoComponent implements OnInit {
 
   dateBack(date: any) {
     if (date === "" || date === undefined) {
-      return "";
+      return "No se recibio fecha";
     }
     date = moment(Date.parse(date));
 
     return this.now.diff(date, "days");
   }
 
+  /*Funcion para desencriptar */
+
+  base64(str: string) {
+    if (this.isDecoded) {
+      this.isDecoded = false;
+    }
+    this.isDecoded = true;
+    return atob(str);
+  }
+
+  porcents(porcentaje: any) {
+    porcentaje = porcentaje.split("%")[0];
+    porcentaje = parseInt(porcentaje);
+    console.log(porcentaje)
+    return porcentaje;
+  }
   
+  /* ********************************************************************* */
+  
+  /*
   decoded(str: string) {
-    return atob(str)
+    this.isEncoded = true;
+    return atob(str);
   }
 
   encoded(str: string) {
-    return btoa(str)
+    this.isEncoded = false;
+    return btoa(str);
   }
-
-  /* ********************************************************************* */
+  */
 
   /*availYellow(path: any, avail: any) {
     if(path != '/' || path != '/mnt/datos/share'){

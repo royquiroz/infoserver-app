@@ -28,7 +28,15 @@
         <thead>
           <tr>
             <th class="text-center" scope="col">Notaria/Fecha</th>
-            <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.discos.length'>Discos</th>
+            <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.discos.length'>
+              Discos
+              <button type="button" placement="bottom" class="btn btn-outline-secondary" container="body" [ngbPopover]="popContent">
+                <i class="far fa-eye-slash fa-xs puntero"></i>
+                <ng-template #popContent>
+                  <pre>{{notaria | json}}</pre>
+                </ng-template>
+              </button>
+            </th>
             <th class="text-center" scope="col">Samba</th>
             <th class="text-center" scope="col">Mantenimiento</th>
             <th class="text-center" scope="col">Fecha Server</th>
@@ -40,9 +48,11 @@
         </thead>
         <tbody>
           <tr>
+
             <th class="text-center" [ngClass]="{'amarillo': dateBack(notaria?.informacion?.fecha[0]?.fecha) === 1, 'rojo': dateBack(notaria?.informacion?.fecha[0]?.fecha) > 1 }">{{notaria.id_notaria}}
               <br /><small>{{notaria?.informacion?.fecha[0]?.fecha}}</small>
             </th>
+
             <td *ngFor="let disco of notaria?.informacion?.discos" [ngClass]="{'amarillo': porcentYellow(disco.Mounted_on, disco.Use, disco.Avail), 'rojo': porcentRed(disco.Mounted_on, disco.Use, disco.Avail) }"
               [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
               <ng-template #popContent>
@@ -51,6 +61,7 @@
               <p class="text-center">{{cutName(disco.Mounted_on)}} <br /> {{values(disco.Mounted_on, disco.Use,
                 disco.Avail)}}</p>
             </td>
+
             <td>
               <div *ngFor="let samba of notaria?.informacion?.samba" triggers="mouseenter:mouseleave" container="body"
                 [ngbPopover]="popContent" class="text-center">
@@ -60,30 +71,47 @@
                 <p class="text-center">{{samba.carpeta}}</p>
               </div>
             </td>
+
+            <!--Columnas de fechas-->
             <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[1] | json}}" triggers="mouseenter:mouseleave"
-              container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 || dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) === '' }">
-              <span *ngIf="!notaria?.informacion?.fecha[1]?.error; else blockMaintenance">{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}} Meses</span>
-              <ng-template #blockMaintenance>{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}} Meses <br/> {{notaria?.informacion?.fecha[1]?.observaciones}}</ng-template>              
+              container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 || dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) === 'No se recibio fecha' }">
+              <span *ngIf="!notaria?.informacion?.fecha[1]?.error; else blockMaintenance">
+                {{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}} <span *ngIf="dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) !== 'No se recibio fecha' ">Meses</span>
+              </span>
+              <ng-template #blockMaintenance>{{dateMaintenance(notaria?.informacion?.fecha[1]?.fecha)}} <span *ngIf="dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) !== 'No se recibio fecha' ">Meses</span><br />
+                {{notaria?.informacion?.fecha[1]?.observaciones}}</ng-template>
             </td>
 
             <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[0] | json}}" triggers="mouseenter:mouseleave"
-              container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === '' }">
-              <span *ngIf="!notaria?.informacion?.fecha[0]?.error; else blockServer">{{dateServer(notaria?.informacion?.fecha[0]?.fecha)}} Horas</span>
-              <ng-template #blockServer>{{dateServer(notaria?.informacion?.fecha[0]?.fecha)}} Horas <br/> {{notaria?.informacion?.fecha[0]?.observaciones}}</ng-template>
+              container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === 'No se recibio fecha' }">
+              <span *ngIf="!notaria?.informacion?.fecha[0]?.error; else blockServer">
+                {{dateServer(notaria?.informacion?.fecha[0]?.fecha)}} <span *ngIf="dateServer(notaria?.informacion?.fecha[0]?.fecha) !== 'No se recibio fecha' ">Horas</span>
+              </span>
+              <ng-template #blockServer>{{dateServer(notaria?.informacion?.fecha[0]?.fecha)}} <span *ngIf="dateServer(notaria?.informacion?.fecha[0]?.fecha) !== 'No se recibio fecha' ">Horas</span><br />
+                {{notaria?.informacion?.fecha[0]?.observaciones}}</ng-template>
             </td>
 
             <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[2] | json}}" triggers="mouseenter:mouseleave"
-              container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[2]?.fecha) === '' }">
-              <span *ngIf="!notaria?.informacion?.fecha[2]?.error; else blockDateBack1">{{dateBack(notaria?.informacion?.fecha[2]?.fecha)}} Dias</span>
-              <ng-template #blockDateBack1>{{dateBack(notaria?.informacion?.fecha[2]?.fecha)}} Dias <br/> {{notaria?.informacion?.fecha[2]?.observaciones}}</ng-template>
+              container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[2]?.fecha) === 'No se recibio fecha' }">
+              <span *ngIf="!notaria?.informacion?.fecha[2]?.error; else blockDateBack1">
+                {{dateBack(notaria?.informacion?.fecha[2]?.fecha)}} <span *ngIf="dateBack(notaria?.informacion?.fecha[2]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+              </span>
+              <ng-template #blockDateBack1>{{dateBack(notaria?.informacion?.fecha[2]?.fecha)}} <span *ngIf="dateBack(notaria?.informacion?.fecha[2]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+                <br />
+                {{notaria?.informacion?.fecha[2]?.observaciones}}</ng-template>
             </td>
 
             <td class="text-center" ngbPopover="{{notaria?.informacion?.fecha[3] | json}}" triggers="mouseenter:mouseleave"
-              container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[3]?.fecha) === '' }">
-              <span *ngIf="!notaria?.informacion?.fecha[3]?.error; else blockDateBack2">{{dateBack(notaria?.informacion?.fecha[3]?.fecha)}} Dias</span>
-              <ng-template #blockDateBack2>{{dateBack(notaria?.informacion?.fecha[3]?.fecha)}} Dias <br/> {{notaria?.informacion?.fecha[3]?.observaciones}}</ng-template>
+              container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[3]?.fecha) === 'No se recibio fecha' }">
+              <span *ngIf="!notaria?.informacion?.fecha[3]?.error; else blockDateBack2">
+                {{dateBack(notaria?.informacion?.fecha[3]?.fecha)}} <span *ngIf="dateBack(notaria?.informacion?.fecha[3]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+              </span>
+              <ng-template #blockDateBack2>{{dateBack(notaria?.informacion?.fecha[3]?.fecha)}} <span *ngIf="dateBack(notaria?.informacion?.fecha[3]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+                <br />
+                {{notaria?.informacion?.fecha[3]?.observaciones}}</ng-template>
             </td>
 
+            <!--Moodulo de Red-->
             <td>
               <div *ngFor="let red of notaria?.informacion?.red" triggers="mouseenter:mouseleave" container="body"
                 [ngbPopover]="popContent" class="text-center">
@@ -99,11 +127,28 @@
               <ng-template #popContent>
                 <pre>{{software | json}}</pre>
               </ng-template>
-              <p class="text-center">{{software.nombre}} <br /> {{software.version}}</p>
+              <p class="text-center">
+                {{software.nombre}} <br /> {{software.version}}
+              </p>
+              <div *ngIf="software.nombre === 'cron'" (click)="base64(software?.obs)">
+                <span *ngIf="!isDecoded; else blockDecoded">{{software?.obs}}</span>
+                <ng-template #blockDecoded>{{base64(software?.obs)}}</ng-template>
+              </div>
             </td>
 
           </tr>
         </tbody>
+
+        <!--<div class="col-md-1 text-left" (click)="isVisible()">
+          <span *ngIf="!visible; else otherIcon">
+            <i class="far fa-eye fa-xs puntero"></i>
+          </span>
+          <ng-template #otherIcon>
+            <i class="far fa-eye-slash fa-xs puntero"></i>
+          </ng-template>
+        </div>-->
+
+
       </table>
     </div>
 
@@ -118,7 +163,15 @@
         <thead>
           <tr>
             <th class="text-center" scope="col">Notaria/Fecha</th>
-            <th class="text-center" scope="col" [attr.colspan]="infoId?.info[discLength - 1]?.informacion?.discos.length">Discos</th>
+            <th class="text-center" scope="col" [attr.colspan]="infoId?.info[discLength - 1]?.informacion?.discos.length">
+              Discos
+              <button type="button" placement="bottom" class="btn btn-outline-secondary" container="body" [ngbPopover]="popContent">
+                <i class="far fa-eye-slash fa-xs puntero"></i>
+                <ng-template #popContent>
+                  <pre>{{infoId | json}}</pre>
+                </ng-template>
+              </button>
+            </th>
             <th class='text-center' scope="col">Samba</th>
             <th class="text-center" scope="col">Mantenimiento</th>
             <th class="text-center" scope="col">Fecha Server</th>
@@ -150,28 +203,42 @@
             </div>
           </td>
 
-          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
-            container="body" [ngClass]="{'amarillo': dateMaintenance(item?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(item?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(item?.informacion?.fecha[1]?.fecha) >= 12 || dateMaintenance(item?.informacion?.fecha[1]?.fecha) === '' }">
-            <span *ngIf="!item?.informacion?.fecha[1]?.error; else elseBlock">{{dateMaintenance(item?.informacion?.fecha[1]?.fecha)}} Meses</span>
-            <ng-template #elseBlock>{{item?.informacion?.fecha[1]?.fecha}} {{item?.informacion?.fecha[1]?.observaciones}}</ng-template>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1] | json}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'amarillo': dateMaintenance(item?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(item?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(item?.informacion?.fecha[1]?.fecha) >= 12 || dateMaintenance(item?.informacion?.fecha[1]?.fecha) === 'No se recibio fecha' }">
+            <span *ngIf="!item?.informacion?.fecha[1]?.error; else blockMaintenance">
+              {{dateMaintenance(item?.informacion?.fecha[1]?.fecha)}} <span *ngIf="dateMaintenance(item?.informacion?.fecha[1]?.fecha) !== 'No se recibio fecha' ">Meses</span>
+            </span>
+            <ng-template #blockMaintenance>{{dateMaintenance(item?.informacion?.fecha[1]?.fecha)}} <span *ngIf="dateMaintenance(item?.informacion?.fecha[1]?.fecha) !== 'No se recibio fecha' ">Meses</span><br />
+              {{item?.informacion?.fecha[1]?.observaciones}}</ng-template>
           </td>
 
-          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[0]?.fecha}}" triggers="mouseenter:mouseleave"
-            container="body" [ngClass]="{'amarillo': dateServer(item?.informacion?.fecha[0]?.fecha) === 1 || dateServer(item?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(item?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(item?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(item?.informacion?.fecha[0]?.fecha) === '' }">
-            <span *ngIf="!item?.informacion?.fecha[0]?.error; else elseBlock">{{dateServer(item?.informacion?.fecha[0]?.fecha)}} Horas</span>
-            <ng-template #elseBlock>{{item?.informacion?.fecha[0]?.fecha}} {{item?.informacion?.fecha[0]?.observaciones}}</ng-template>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[0] | json}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'amarillo': dateServer(item?.informacion?.fecha[0]?.fecha) === 1 || dateServer(item?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(item?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(item?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(item?.informacion?.fecha[0]?.fecha) === 'No se recibio fecha' }">
+            <span *ngIf="!item?.informacion?.fecha[0]?.error; else blockServer">
+              {{dateServer(item?.informacion?.fecha[0]?.fecha)}} <span *ngIf="dateServer(item?.informacion?.fecha[0]?.fecha) !== 'No se recibio fecha' ">Horas</span>
+            </span>
+            <ng-template #blockServer>{{dateServer(item?.informacion?.fecha[0]?.fecha)}} <span *ngIf="dateServer(item?.informacion?.fecha[0]?.fecha) !== 'No se recibio fecha' ">Horas</span><br />
+              {{item?.informacion?.fecha[0]?.observaciones}}</ng-template>
           </td>
 
-          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
-            container="body" [ngClass]="{'rojo': dateBack(item?.informacion?.fecha[2]?.fecha) >= 1 || dateBack(item?.informacion?.fecha[3]?.fecha) === '' }">
-            <span *ngIf="!item?.informacion?.fecha[2]?.error; else elseBlock">{{dateBack(item?.informacion?.fecha[2]?.fecha)}} Dias</span>
-            <ng-template #elseBlock>{{item?.informacion?.fecha[2]?.fecha}} {{item?.informacion?.fecha[2]?.observaciones}}</ng-template>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[2] | json}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'rojo': dateBack(item?.informacion?.fecha[2]?.fecha) >= 2 || dateBack(item?.informacion?.fecha[2]?.fecha) === 'No se recibio fecha' }">
+            <span *ngIf="!item?.informacion?.fecha[2]?.error; else blockDateBack1">
+              {{dateBack(item?.informacion?.fecha[2]?.fecha)}} <span *ngIf="dateBack(item?.informacion?.fecha[2]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+            </span>
+            <ng-template #blockDateBack1>{{dateBack(item?.informacion?.fecha[2]?.fecha)}} <span *ngIf="dateBack(item?.informacion?.fecha[2]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+              <br />
+              {{item?.informacion?.fecha[2]?.observaciones}}</ng-template>
           </td>
 
-          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[1]?.fecha}}" triggers="mouseenter:mouseleave"
-            container="body" [ngClass]="{'rojo': dateBack(item?.informacion?.fecha[3]?.fecha) >= 1 || dateBack(item?.informacion?.fecha[3]?.fecha) === '' }">
-            <span *ngIf="!item?.informacion?.fecha[3]?.error; else elseBlock">{{dateBack(item?.informacion?.fecha[3]?.fecha)}} Dias</span>
-            <ng-template #elseBlock>{{item?.informacion?.fecha[3]?.fecha}} {{item?.informacion?.fecha[3]?.observaciones}}</ng-template>
+          <td class="text-center" ngbPopover="{{item?.informacion?.fecha[3] | json}}" triggers="mouseenter:mouseleave"
+            container="body" [ngClass]="{'rojo': dateBack(item?.informacion?.fecha[3]?.fecha) >= 2 || dateBack(item?.informacion?.fecha[3]?.fecha) === 'No se recibio fecha' }">
+            <span *ngIf="!item?.informacion?.fecha[3]?.error; else blockDateBack2">
+              {{dateBack(item?.informacion?.fecha[3]?.fecha)}} <span *ngIf="dateBack(item?.informacion?.fecha[3]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+            </span>
+            <ng-template #blockDateBack2>{{dateBack(item?.informacion?.fecha[3]?.fecha)}} <span *ngIf="dateBack(item?.informacion?.fecha[3]?.fecha) !== 'No se recibio fecha' ">Dias</span>
+              <br />
+              {{item?.informacion?.fecha[3]?.observaciones}}</ng-template>
           </td>
 
           <td>
@@ -189,7 +256,13 @@
             <ng-template #popContent>
               <pre>{{software | json}}</pre>
             </ng-template>
-            <p class="text-center">{{software.nombre}} <br /> {{software.version}}</p>
+            <p class="text-center">
+              {{software.nombre}} <br /> {{software.version}}
+            </p>
+            <div *ngIf="software.nombre === 'cron'" (click)="base64(software?.obs)">
+              <span *ngIf="!isDecoded; else blockDecoded">{{software?.obs}}</span>
+              <ng-template #blockDecoded>{{base64(software?.obs)}}</ng-template>
+            </div>
           </td>
 
         </tbody>
@@ -216,10 +289,10 @@
         <i class="far fa-eye-slash fa-xs puntero"></i>
       </ng-template>
     </div>
-  </div>
+  </div>-->
 
   <div *ngIf="visible">
     <pre>{{data | json}}</pre>
-  </div>-->
+  </div>
 
 </div>
