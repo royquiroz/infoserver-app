@@ -28,15 +28,7 @@
         <thead>
           <tr>
             <th class="text-center" scope="col">Notaria/Fecha</th>
-            <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.discos.length'>
-              Discos
-              <button type="button" placement="bottom" class="btn btn-outline-secondary" container="body" [ngbPopover]="popContent">
-                <i class="far fa-eye-slash fa-xs puntero"></i>
-                <ng-template #popContent>
-                  <pre>{{notaria | json}}</pre>
-                </ng-template>
-              </button>
-            </th>
+            <th class="text-center" scope="col" [attr.colspan]='notaria?.informacion?.discos.length'>Discos</th>
             <th class="text-center" scope="col">Samba</th>
             <th class="text-center" scope="col">Mantenimiento</th>
             <th class="text-center" scope="col">Fecha Server</th>
@@ -49,7 +41,8 @@
         <tbody>
           <tr>
 
-            <th class="text-center" [ngClass]="{'amarillo': dateBack(notaria?.informacion?.fecha[0]?.fecha) === 1, 'rojo': dateBack(notaria?.informacion?.fecha[0]?.fecha) > 1 }">{{notaria.id_notaria}}
+            <th class="text-center" [ngClass]="{'amarillo': dateBack(notaria?.informacion?.fecha[0]?.fecha) === 1, 'rojo': dateBack(notaria?.informacion?.fecha[0]?.fecha) > 1 }">
+              <span (click)="open(content)">{{notaria.id_notaria}}</span>
               <br /><small>{{notaria?.informacion?.fecha[0]?.fecha}}</small>
             </th>
 
@@ -130,24 +123,28 @@
               <p class="text-center">
                 {{software.nombre}} <br /> {{software.version}}
               </p>
-              <div *ngIf="software.nombre === 'cron'" (click)="base64(software?.obs)">
-                <span *ngIf="!isDecoded; else blockDecoded">{{software?.obs}}</span>
-                <ng-template #blockDecoded>{{base64(software?.obs)}}</ng-template>
+              <div *ngIf="software.nombre === 'cron'" (click)="open(decoded)">
+                <span>{{software?.obs}}</span>
+                <!--<ng-template #blockDecoded>{{base64(software?.obs)}}</ng-template>-->
               </div>
+
+              <!--Modal base64-->
+              <ng-template #decoded let-modal>
+                <div class="modal-body">
+                  <pre>{{base64(software?.obs) | json}}</pre>
+                </div>
+              </ng-template>
             </td>
 
           </tr>
         </tbody>
 
-        <!--<div class="col-md-1 text-left" (click)="isVisible()">
-          <span *ngIf="!visible; else otherIcon">
-            <i class="far fa-eye fa-xs puntero"></i>
-          </span>
-          <ng-template #otherIcon>
-            <i class="far fa-eye-slash fa-xs puntero"></i>
-          </ng-template>
-        </div>-->
-
+        <!--Modal muestra json-->
+        <ng-template #content let-modal>
+          <div class="modal-body">
+            <pre>{{notaria | json}}</pre>
+          </div>
+        </ng-template>
 
       </table>
     </div>
@@ -163,15 +160,7 @@
         <thead>
           <tr>
             <th class="text-center" scope="col">Notaria/Fecha</th>
-            <th class="text-center" scope="col" [attr.colspan]="infoId?.info[discLength - 1]?.informacion?.discos.length">
-              Discos
-              <button type="button" placement="bottom" class="btn btn-outline-secondary" container="body" [ngbPopover]="popContent">
-                <i class="far fa-eye-slash fa-xs puntero"></i>
-                <ng-template #popContent>
-                  <pre>{{infoId | json}}</pre>
-                </ng-template>
-              </button>
-            </th>
+            <th class="text-center" scope="col" [attr.colspan]="infoId?.info[discLength - 1]?.informacion?.discos.length">Discos</th>
             <th class='text-center' scope="col">Samba</th>
             <th class="text-center" scope="col">Mantenimiento</th>
             <th class="text-center" scope="col">Fecha Server</th>
@@ -182,7 +171,8 @@
           </tr>
         </thead>
         <tbody *ngFor="let item of infoId?.info">
-          <th class="text-center" [ngClass]="{'amarillo': dateBack(item?.informacion?.fecha[0]?.fecha) === 1, 'rojo': dateBack(item?.informacion?.fecha[0]?.fecha) > 1 }">{{item.id_notaria}}
+          <th class="text-center" [ngClass]="{'amarillo': dateBack(item?.informacion?.fecha[0]?.fecha) === 1, 'rojo': dateBack(item?.informacion?.fecha[0]?.fecha) > 1 }">
+            <span (click)="open(content)">{{item.id_notaria}}</span>
             <br /><small>{{item?.informacion?.fecha[0]?.fecha}}</small>
           </th>
           <td *ngFor="let disco of item?.informacion?.discos" [ngClass]="{'amarillo': porcentYellow(disco.Mounted_on, disco.Use, disco.Avail), 'rojo': porcentRed(disco.Mounted_on, disco.Use, disco.Avail) }"
@@ -259,13 +249,25 @@
             <p class="text-center">
               {{software.nombre}} <br /> {{software.version}}
             </p>
-            <div *ngIf="software.nombre === 'cron'" (click)="base64(software?.obs)">
-              <span *ngIf="!isDecoded; else blockDecoded">{{software?.obs}}</span>
-              <ng-template #blockDecoded>{{base64(software?.obs)}}</ng-template>
+            <div *ngIf="software.nombre === 'cron'" (click)="open(decoded)">
+              <span>{{software?.obs}}</span>
+              <!--Modal base64-->
+              <ng-template #decoded let-modal>
+                <div class="modal-body">
+                  <pre>{{base64(software?.obs) | json}}</pre>
+                </div>
+              </ng-template>
             </div>
           </td>
 
+          <!--Modal muestra json-->
+          <ng-template #content let-modal>
+            <div class="modal-body">
+              <pre>{{item | json}}</pre>
+            </div>
+          </ng-template>
         </tbody>
+
       </table>
     </div>
 
@@ -291,8 +293,8 @@
     </div>
   </div>-->
 
-  <div *ngIf="visible">
+  <!--<div *ngIf="visible">
     <pre>{{data | json}}</pre>
-  </div>
+  </div>-->
 
 </div>

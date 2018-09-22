@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ServersService } from "../../services/servers.service";
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from "moment";
 
 @Component({
@@ -9,16 +10,18 @@ import * as moment from "moment";
 export class InfoComponent implements OnInit {
   constructor(
     private _serversService: ServersService,
-    private cdRef: ChangeDetectorRef
+    private modalService: NgbModal
   ) {}
   infoAll: any;
   recent: any = [];
-  visible: boolean = false;
+  //visible: boolean = false;
+
   /**Informacion por notaria */
   infoId: any;
   dataId: boolean = false;
   discLength: any;
   isDecoded: boolean = false;
+  closeResult: any;
 
   now: any = moment(Date.now());
 
@@ -73,9 +76,9 @@ export class InfoComponent implements OnInit {
     }
   }
 
-  isVisible() {
+  /*isVisible() {
     this.visible = !this.visible;
-  }
+  }*/
 
   /*Funciones para establecer colores a los campos de discos*/
 
@@ -209,11 +212,7 @@ export class InfoComponent implements OnInit {
   /*Funcion para desencriptar */
 
   base64(str: string) {
-    if (this.isDecoded) {
-      this.isDecoded = false;
-    }
-    this.isDecoded = true;
-    return atob(str);
+    return  atob(str);
   }
 
   porcents(porcentaje: any) {
@@ -222,6 +221,28 @@ export class InfoComponent implements OnInit {
     console.log(porcentaje)
     return porcentaje;
   }
+
+  /*Funcion para Modal*/
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
+
+
   
   /* ********************************************************************* */
   
