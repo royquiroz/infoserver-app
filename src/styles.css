@@ -102,3 +102,7 @@
 .card {
   margin: 1%;
 }
+
+.btn {
+  padding: 2px 5px 2px 5px !important;
+}

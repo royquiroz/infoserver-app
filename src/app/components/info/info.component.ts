@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ServersService } from "../../services/servers.service";
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 import * as moment from "moment";
 
 @Component({
@@ -58,6 +58,9 @@ export class InfoComponent implements OnInit {
   searchDataId(id) {
     this._serversService.dataId(id).subscribe(
       (res: any) => {
+        res.data.info.reverse();
+        console.log(res);
+
         this.infoId = res.data;
         this.discLength = this.infoId.info.length;
       },
@@ -212,40 +215,47 @@ export class InfoComponent implements OnInit {
   /*Funcion para desencriptar */
 
   base64(str: string) {
-    return  atob(str);
+    return atob(str);
   }
 
   porcents(porcentaje: any) {
     porcentaje = porcentaje.split("%")[0];
     porcentaje = parseInt(porcentaje);
-    console.log(porcentaje)
+    console.log(porcentaje);
     return porcentaje;
+  }
+
+  trimString(str: string) {
+    return str.substring(0, 10);
   }
 
   /*Funcion para Modal*/
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.modalService
+      .open(content, { ariaLabelledBy: "modal-basic-title" })
+      .result.then(
+        result => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        reason => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
   }
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
+      return "by pressing ESC";
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
+      return "by clicking on a backdrop";
     } else {
-      return  `with: ${reason}`;
+      return `with: ${reason}`;
     }
   }
 
-
-  
   /* ********************************************************************* */
-  
+
   /*
   decoded(str: string) {
     this.isEncoded = true;
