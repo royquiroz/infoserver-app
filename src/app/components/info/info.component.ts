@@ -182,7 +182,7 @@ export class InfoComponent implements OnInit {
   /*Funcion para calcular los meses de mantenimiento */
 
   dateMaintenance(date: any) {
-    if (date === "" || date === undefined) {
+    if (date === "" || date === undefined || date === false) {
       return "No se recibio fecha";
     }
     date = moment(Date.parse(date));
@@ -193,7 +193,7 @@ export class InfoComponent implements OnInit {
   /*Funcion para calcular la fecha del server*/
 
   dateServer(date: any) {
-    if (date === "" || date === undefined) {
+    if (date === "" || date === undefined || date === false) {
       return "No se recibio fecha";
     }
     date = moment(Date.parse(date));
@@ -204,7 +204,7 @@ export class InfoComponent implements OnInit {
   /*Funcion para calcular los dias de respaldo */
 
   dateBack(date: any) {
-    if (date === "" || date === undefined) {
+    if (date === "" || date === undefined || date === false) {
       return "No se recibio fecha";
     }
     date = moment(Date.parse(date));
@@ -227,6 +227,10 @@ export class InfoComponent implements OnInit {
 
   trimString(str: string) {
     return str.substring(0, 10);
+  }
+
+  miFuncion(str: any) {
+    console.log(str.includes(`"error": true`));
   }
 
   /*Funcion para Modal*/

@@ -69,9 +69,9 @@
           </td>
 
           <!--Columnas de fechas-->
-          <td class="text-center" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 || dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) === 'No se recibio fecha' }">
+          <td class="text-center" [ngbPopover]="popContent1" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 10 && dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) < 12, 'rojo': dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) >= 12 || dateMaintenance(notaria?.informacion?.fecha[1]?.fecha) === 'No se recibio fecha' || notaria?.informacion?.fecha[1]?.error === true }">
 
-            <ng-template #popContent>
+            <ng-template #popContent1>
               <pre>{{notaria?.informacion?.fecha[1] | json}}</pre>
             </ng-template>
 
@@ -84,9 +84,9 @@
               {{notaria?.informacion?.fecha[1]?.observaciones}}</ng-template>
           </td>
 
-          <td class="text-center" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === 'No se recibio fecha' }">
+          <td class="text-center" [ngbPopover]="popContent2" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'amarillo': dateServer(notaria?.informacion?.fecha[0]?.fecha) === 1 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === -1, 'rojo': dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) >= 2 || dateServer(notaria?.informacion?.fecha[0]?.fecha) === 'No se recibio fecha' || notaria?.informacion?.fecha[0]?.error === true }">
 
-            <ng-template #popContent>
+            <ng-template #popContent2>
               <pre>{{notaria?.informacion?.fecha[0] | json}}</pre>
             </ng-template>
 
@@ -99,9 +99,9 @@
               {{notaria?.informacion?.fecha[0]?.observaciones}}</ng-template>
           </td>
 
-          <td class="text-center" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[2]?.fecha) === 'No se recibio fecha' }">
+          <td class="text-center" [ngbPopover]="popContent3" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[2]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[2]?.fecha) === 'No se recibio fecha' || notaria?.informacion?.fecha[2]?.error === true }">
 
-            <ng-template #popContent>
+            <ng-template #popContent3>
               <pre>{{notaria?.informacion?.fecha[2] | json}}</pre>
             </ng-template>
 
@@ -114,9 +114,9 @@
               {{notaria?.informacion?.fecha[2]?.observaciones}}</ng-template>
           </td>
 
-          <td class="text-center" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[3]?.fecha) === 'No se recibio fecha' }">
+          <td class="text-center" [ngbPopover]="popContent4" triggers="mouseenter:mouseleave" container="body" [ngClass]="{'rojo': dateBack(notaria?.informacion?.fecha[3]?.fecha) >= 2 || dateBack(notaria?.informacion?.fecha[3]?.fecha) === 'No se recibio fecha' || notaria?.informacion?.fecha[3]?.error === true }">
 
-            <ng-template #popContent>
+            <ng-template #popContent4>
               <pre>{{notaria?.informacion?.fecha[3] | json}}</pre>
             </ng-template>
 
