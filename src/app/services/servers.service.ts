@@ -15,7 +15,7 @@ export class ServersService {
   }
 
   data(): Observable<any> {
-    return this.http.get(this.url).pipe(
+    return this.http.get(`${this.url}?limit=100`).pipe(
       map((data: any) => {
         return data;
       }),
